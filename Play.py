@@ -1,40 +1,48 @@
 import random
 
-def play_round():
-  """Plays a single round of Rock-Paper-Scissors."""
+def jugar():
+    opciones = ['piedra', 'papel', 'tijera']
+    usuario_gana = 0
+    computadora_gana = 0
 
-  player_choice = input("Choose Rock, Paper, or Scissors: ").lower()
+    while True:
+        print("\nElige una opción: ")
+        print("1. Piedra")
+        print("2. Papel")
+        print("3. Tijera")
+        print("4. Salir")
 
-  if player_choice not in ["rock", "paper", "scissors"]:
-    print("Invalid choice. Please choose Rock, Paper, or Scissors.")
-    return
+        eleccion_usuario = input("Tu elección: ")
 
-  computer_choice = random.choice(["rock", "paper", "scissors"])
+        if eleccion_usuario == '4':
+            print(f"\nResultados finales: Usuario {usuario_gana} - Computadora {computadora_gana}")
+            print("Gracias por jugar. ¡Adiós!")
+            break
 
-  print(f"You chose {player_choice}.")
-  print(f"Computer chose {computer_choice}.")
+        if eleccion_usuario not in ['1', '2', '3']:
+            print("Elección no válida, por favor elige nuevamente.")
+            continue
 
-  if player_choice == computer_choice:
-    print("Tie!")
-  elif (player_choice == "rock" and computer_choice == "scissors") or \
-       (player_choice == "paper" and computer_choice == "rock") or \
-       (player_choice == "scissors" and computer_choice == "paper"):
-    print("You win!")
-  else:
-    print("You lose!")
+        eleccion_usuario = int(eleccion_usuario) - 1
+        eleccion_computadora = random.choice(opciones)
 
-def play_game():
-  """Plays multiple rounds of Rock-Paper-Scissors."""
+        print(f"Usuario elige: {opciones[eleccion_usuario]}")
+        print(f"Computadora elige: {eleccion_computadora}")
 
-  while True:
-    play_round()
-
-    play_again = input("Play again? (y/n): ").lower()
-
-    if play_again != "y":
-      break
+        if opciones[eleccion_usuario] == eleccion_computadora:
+            print("Es un empate!")
+        elif (opciones[eleccion_usuario] == 'piedra' and eleccion_computadora == 'tijera') or \
+             (opciones[eleccion_usuario] == 'papel' and eleccion_computadora == 'piedra') or \
+             (opciones[eleccion_usuario] == 'tijera' and eleccion_computadora == 'papel'):
+            print("¡Ganas tú!")
+            usuario_gana += 1
+        else:
+            print("¡Gana la computadora!")
+            computadora_gana += 1
 
 if __name__ == "__main__":
-  play_game()
+    jugar()
+       
+
        
 
