@@ -1,47 +1,91 @@
 import random
 
-def jugar():
-    opciones = ['piedra', 'papel', 'tijera']
-    usuario_gana = 0
-    computadora_gana = 0
+# Reglas del juego
+rules = {
+    "tijeras": ["papel", "lagarto"],
+    "papel": ["piedra", "spock"],
+    "piedra": ["tijeras", "lagarto"],
+    "lagarto": ["spock", "papel"],
+    "spock": ["tijeras", "piedra"]
+}
 
+choices = list(rules.keys())
+
+def play_game(player1_choice, player2_choice):
+    if player1_choice == player2_choice:
+        return "Empate"
+    elif player2_choice in rules[player1_choice]:
+        return "Jugador 1 gana"
+    else:
+        return "Jugador 2 gana"
+
+def play_rounds(num_rounds):
+    player1_score = 0
+    player2_score = 0
+    
+    for _ in range(num_rounds):
+        player1_choice = random.choice(choices)
+        player2_choice = random.choice(choices)
+        result = play_game(player1_choice, player2_choice)
+        
+        if result == "Jugador 1 gana":
+            player1_score += 1
+        elif result == "Jugador 2 gana":
+            player2_score += 1
+        
+        print(f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
+    
+    if player1_score > player2_score:
+        print("Jugador 1 es el ganador del juego")
+    elif player2_score > player1_score:
+        print("Jugador 2 es el ganador del juego")
+    else:
+        print("El juego terminó en empate")
+
+def player_vs_player():
+    player1_score = 0
+    player2_score = 0
+    
     while True:
-        print("\nElige una opción: ")
-        print("1. Piedra")
-        print("2. Papel")
-        print("3. Tijera")
-        print("4. Salir")
-
-        eleccion_usuario = input("Tu elección: ")
-
-        if eleccion_usuario == '4':
-            print(f"\nResultados finales: Usuario {usuario_gana} - Computadora {computadora_gana}")
-            print("Gracias por jugar. ¡Adiós!")
+        player1_choice = input("Jugador 1, elige entre tijeras, papel, piedra, lagarto, spock: ").lower()
+        player2_choice = input("Jugador 2, elige entre tijeras, papel, piedra, lagarto, spock: ").lower()
+        
+        if player1_choice not in choices or player2_choice not in choices:
+            print("Elección inválida. Por favor, elija nuevamente.")
+            continue
+        
+        result = play_game(player1_choice, player2_choice)
+        
+        if result == "Jugador 1 gana":
+            player1_score += 1
+        elif result == "Jugador 2 gana":
+            player2_score += 1
+        
+        print(f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
+        print(f"Marcador -> Jugador 1: {player1_score}, Jugador 2: {player2_score}")
+        
+        play_again = input("¿Quieres jugar otra vez? (s/n): ").lower()
+        if play_again != 's':
             break
 
-        if eleccion_usuario not in ['1', '2', '3']:
-            print("Elección no válida, por favor elige nuevamente.")
-            continue
+import tkinter as tk
+from tkinter import messagebox
 
-        eleccion_usuario = int(eleccion_usuario) - 1
-        eleccion_computadora = random.choice(opciones)
+def play_game_gui(player1_choice, player2_choice):
+    result = play_game(player1_choice, player2_choice)
+    messagebox.showinfo("Resultado", f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
 
-        print(f"Usuario elige: {opciones[eleccion_usuario]}")
-        print(f"Computadora elige: {eleccion_computadora}")
+# Crear ventana principal
+root = tk.Tk()
+root.title("Piedra, Papel, Tijeras, Lagarto, Spock")
 
-        if opciones[eleccion_usuario] == eleccion_computadora:
-            print("Es un empate!")
-        elif (opciones[eleccion_usuario] == 'piedra' and eleccion_computadora == 'tijera') or \
-             (opciones[eleccion_usuario] == 'papel' and eleccion_computadora == 'piedra') or \
-             (opciones[eleccion_usuario] == 'tijera' and eleccion_computadora == 'papel'):
-            print("¡Ganas tú!")
-            usuario_gana += 1
-        else:
-            print("¡Gana la computadora!")
-            computadora_gana += 1
+# Crear botones para cada elección
+for choice in choices:
+    btn = tk.Button(root, text=choice.capitalize(), command=lambda ch=choice: play_game_gui(ch, random.choice(choices)))
+    btn.pack()
 
-if __name__ == "__main__":
-    jugar()
+# Iniciar el bucle de la interfaz gráfica
+root.mainloop()
        
 
        
