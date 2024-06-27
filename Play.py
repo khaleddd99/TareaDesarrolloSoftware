@@ -1,6 +1,5 @@
 import random
 
-# Reglas del juego
 rules = {
     "tijeras": ["papel", "lagarto"],
     "papel": ["piedra", "spock"],
@@ -75,16 +74,13 @@ def play_game_gui(player1_choice, player2_choice):
     result = play_game(player1_choice, player2_choice)
     messagebox.showinfo("Resultado", f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
 
-# Crear ventana principal
 root = tk.Tk()
 root.title("Piedra, Papel, Tijeras, Lagarto, Spock")
 
-# Crear botones para cada elección
 for choice in choices:
     btn = tk.Button(root, text=choice.capitalize(), command=lambda ch=choice: play_game_gui(ch, random.choice(choices)))
     btn.pack()
 
-# Iniciar el bucle de la interfaz gráfica
 root.mainloop()
        
 
