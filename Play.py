@@ -1,4 +1,6 @@
-import random
+import tkinter as tk
+
+from tkinter import messagebox
 
 rules = {
     "tijeras": ["papel", "lagarto"],
@@ -18,71 +20,64 @@ def play_game(player1_choice, player2_choice):
     else:
         return "Jugador 2 gana"
 
-def play_rounds(num_rounds):
-    player1_score = 0
-    player2_score = 0
+def handle_game():
+    global player1_score, player2_score
     
-    for _ in range(num_rounds):
-        player1_choice = random.choice(choices)
-        player2_choice = random.choice(choices)
-        result = play_game(player1_choice, player2_choice)
-        
-        if result == "Jugador 1 gana":
-            player1_score += 1
-        elif result == "Jugador 2 gana":
-            player2_score += 1
-        
-        print(f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
+    player1_choice = player1_var.get().lower()
+    player2_choice = player2_var.get().lower()
     
-    if player1_score > player2_score:
-        print("Jugador 1 es el ganador del juego")
-    elif player2_score > player1_score:
-        print("Jugador 2 es el ganador del juego")
-    else:
-        print("El juego terminó en empate")
-
-def player_vs_player():
-    player1_score = 0
-    player2_score = 0
+    if player1_choice not in choices or player2_choice not in choices:
+        messagebox.showerror("Error", "Elección inválida. Por favor, elija nuevamente.")
+        return
     
-    while True:
-        player1_choice = input("Jugador 1, elige entre tijeras, papel, piedra, lagarto, spock: ").lower()
-        player2_choice = input("Jugador 2, elige entre tijeras, papel, piedra, lagarto, spock: ").lower()
-        
-        if player1_choice not in choices or player2_choice not in choices:
-            print("Elección inválida. Por favor, elija nuevamente.")
-            continue
-        
-        result = play_game(player1_choice, player2_choice)
-        
-        if result == "Jugador 1 gana":
-            player1_score += 1
-        elif result == "Jugador 2 gana":
-            player2_score += 1
-        
-        print(f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
-        print(f"Marcador -> Jugador 1: {player1_score}, Jugador 2: {player2_score}")
-        
-        play_again = input("¿Quieres jugar otra vez? (s/n): ").lower()
-        if play_again != 's':
-            break
-
-import tkinter as tk
-from tkinter import messagebox
-
-def play_game_gui(player1_choice, player2_choice):
     result = play_game(player1_choice, player2_choice)
-    messagebox.showinfo("Resultado", f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
+    
+    if result == "Jugador 1 gana":
+        player1_score += 1
+    elif result == "Jugador 2 gana":
+        player2_score += 1
+    
+    result_label.config(text=f"Jugador 1: {player1_choice}, Jugador 2: {player2_choice} -> {result}")
+    score_label.config(text=f"Marcador -> Jugador 1: {player1_score}, Jugador 2: {player2_score}")
+
+def reset_game():
+    global player1_score, player2_score
+    player1_score = 0
+    player2_score = 0
+    result_label.config(text="")
+    score_label.config(text="Marcador -> Jugador 1: 0, Jugador 2: 0")
+
+player1_score = 0
+player2_score = 0
 
 root = tk.Tk()
 root.title("Piedra, Papel, Tijeras, Lagarto, Spock")
 
-for choice in choices:
-    btn = tk.Button(root, text=choice.capitalize(), command=lambda ch=choice: play_game_gui(ch, random.choice(choices)))
-    btn.pack()
+player1_label = tk.Label(root, text="Jugador 1, elige entre tijeras, papel, piedra, lagarto, spock:")
+player1_label.pack()
+player1_var = tk.StringVar()
+player1_entry = tk.Entry(root, textvariable=player1_var)
+player1_entry.pack()
+
+player2_label = tk.Label(root, text="Jugador 2, elige entre tijeras, papel, piedra, lagarto, spock:")
+player2_label.pack()
+player2_var = tk.StringVar()
+player2_entry = tk.Entry(root, textvariable=player2_var)
+player2_entry.pack()
+
+play_button = tk.Button(root, text="Jugar", command=handle_game)
+play_button.pack()
+
+reset_button = tk.Button(root, text="Reiniciar", command=reset_game)
+reset_button.pack()
+
+result_label = tk.Label(root, text="")
+result_label.pack()
+
+score_label = tk.Label(root, text="Marcador -> Jugador 1: 0, Jugador 2: 0")
+score_label.pack()
 
 root.mainloop()
-       
 
        
 
